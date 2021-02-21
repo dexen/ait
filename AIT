@@ -6,4 +6,4 @@ flag e +
 	cd `{dirname $0}
 	mk ait-dev }
 
-php `{dirname $0}^/^ait.php `{dirname}^/^config.txt $*
+php `{dirname $0}^/^ait.php `{dirname $0}^/^config.txt $*

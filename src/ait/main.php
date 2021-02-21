@@ -1,13 +1,13 @@
 <?php
 
-require 'src/ait/C/ScriptTuple.php';
-require 'src/ait/C/Config.php';
-require 'src/ait/C/Connection.php';
+require 'C/ScriptTuple.php';
+require 'C/Config.php';
+require 'C/Connection.php';
 
 function showHelp()
 {
 	echo "ait: upload files and directories to server\n";
-	echo "usage: php ait.php CONFIG_FILE 
+	echo "usage: php ait.php CONFIG_FILE SERVER_URL UPLOAD_SOURCE ...\n";
 }
 
 if (in_array($argv[0]??null, [ '-h', '--help']))
