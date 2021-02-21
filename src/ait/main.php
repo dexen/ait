@@ -1,6 +1,7 @@
 <?php
 
 require 'lib.php';
+require 'C/AitException.php';
 require 'C/ScriptTuple.php';
 require 'C/Config.php';
 require 'C/Connection.php';
@@ -40,10 +41,14 @@ function upload_file(Uploader $Uploader, string $fromPN)
 	tracef('done uploading file "%s".', $fromPN);
 }
 
-foreach ($fromA as $fromPN)
-	if (is_file($fromPN))
-		upload_file($Uploader, $fromPN);
-	else if (is_dir($fromPN))
-		upload_dir($Uploader, $fromPN);
-	else
-		throw new \RuntimeException(sprintf('neither file nor directory, cannot upload: "%s"', $fromPN));
+try {
+	foreach ($fromA as $fromPN)
+		if (is_file($fromPN))
+			upload_file($Uploader, $fromPN);
+		else if (is_dir($fromPN))
+			upload_dir($Uploader, $fromPN);
+		else
+			throw new \RuntimeException(sprintf('neither file nor directory, cannot upload: "%s"', $fromPN)); }
+catch (AitException $E) {
+	echo 'Upload failed: ' .$E->getMessage() ."\n";
+	die(1); }
