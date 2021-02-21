@@ -17,4 +17,9 @@ class Connection
 		$h = curl_init($Remote->url());
 		return $h;
 	}
+
+	function post($query = null)
+	{
+		curl_exec($this->h);
+	}
 }

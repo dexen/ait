@@ -4,6 +4,7 @@ require 'lib.php';
 require 'C/ScriptTuple.php';
 require 'C/Config.php';
 require 'C/Connection.php';
+require 'C/Uploader.php';
 
 function showHelp()
 {
@@ -16,3 +17,33 @@ if (in_array($argv[1]??null, [ '-h', '--help']))
 
 $Config = new Config($argv[1]);
 $Connection = new Connection($Config->configForServer($argv[2]));
+$Uploader = new Uploader($Connection);
+
+$fromA = array_slice($argv, 3);
+
+function upload_dir(Uploader $Uploader, string $fromPN)
+{
+	tp(sprintf('should upload dir "%s"', $fromPN));
+}
+
+function tracef(string $str, ...$a)
+{
+	printf($str ."\n", ...$a);
+}
+
+function upload_file(Uploader $Uploader, string $fromPN)
+{
+	tracef('uploading file "%s"...', $fromPN);
+
+	$Uploader->postFile($fromPN, file_get_contents($fromPN), filemtime($fromPN), fileperms($fromPN));
+
+	tracef('done uploading file "%s".', $fromPN);
+}
+
+foreach ($fromA as $fromPN)
+	if (is_file($fromPN))
+		upload_file($Uploader, $fromPN);
+	else if (is_dir($fromPN))
+		upload_dir($Uploader, $fromPN);
+	else
+		throw new \RuntimeException(sprintf('neither file nor directory, cannot upload: "%s"', $fromPN));
