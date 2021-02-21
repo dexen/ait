@@ -19,7 +19,7 @@ class Config
 	{
 		$a = explode("\n", file_get_contents($this->pathname));
 		foreach ($a as $line)
-			if (explode(static::DELIMITER, $line, 3) === $url)
+			if (tp(explode(static::DELIMITER, $line, 3)[0]) === $url)
 				return explode(static::DELIMITER, $line, 3);
 		throw new \RuntimeException(sprintf('configuration not found for server "%s"', $url));
 	}
