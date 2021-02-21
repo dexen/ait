@@ -1,3 +1,5 @@
+MKHELL=rc
+
 ait:VQ:
 	cat src/ait/main.php > ait.php
 
