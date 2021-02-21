@@ -36,7 +36,7 @@ function upload_file(Uploader $Uploader, string $fromPN)
 {
 	tracef('uploading file "%s"...', $fromPN);
 
-	$Uploader->postFile($fromPN, file_get_contents($fromPN), filemtime($fromPN), fileperms($fromPN));
+	$Uploader->postFile($fromPN, filemtime($fromPN), fileperms($fromPN));
 
 	tracef('done uploading file "%s".', $fromPN);
 }

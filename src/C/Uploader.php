@@ -9,8 +9,9 @@ class Uploader
 		$this->Connection = $Connection;
 	}
 
-	function postFile(string $pathname, string $content, int $mtime, int $perms)
+	function postFile(string $pathname, int $mtime, int $perms)
 	{
-		$this->Connection->post();
+		$file = curl_file_create($pathname);
+		$this->Connection->post(null, compact('file', 'mtime', 'perms'));
 	}
 }

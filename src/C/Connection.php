@@ -20,8 +20,10 @@ class Connection
 		return $h;
 	}
 
-	function post($query = null)
+	function post($query = null, $payload = null)
 	{
+		curl_setopt($this->h, CURLOPT_POST, 1);
+		curl_setopt($this->h, CURLOPT_POSTFIELDS, $payload);
 		$ev = curl_exec($this->h);
 		$info = curl_getinfo($this->h);
 		switch ($info['http_code']) {
