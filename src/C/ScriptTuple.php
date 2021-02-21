@@ -10,7 +10,7 @@ class ScriptTuple
 	function __construct(array $rcd)
 	{
 		if (count($rcd) !== 4)
-			throw new \LogicException(sprintf('expected a record of 4 items, got %d', count(rcd)));
+			throw new \LogicException(sprintf('expected a record of 4 items, got %d', count($rcd)));
 
 		$this->url = $rcd[0];
 		$this->script_name = $rcd[1];
