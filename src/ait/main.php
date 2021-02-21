@@ -1,5 +1,6 @@
 <?php
 
+require 'lib.php';
 require 'C/ScriptTuple.php';
 require 'C/Config.php';
 require 'C/Connection.php';
