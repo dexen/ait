@@ -19,8 +19,8 @@ class Config
 	{
 		$a = explode("\n", file_get_contents($this->pathname));
 		foreach ($a as $line)
-			if (explode(static::DELIMITER, $line, 3)[0] === $url)
-				return new ScriptTuple(explode(static::DELIMITER, $line, 3));
+			if (explode(static::DELIMITER, $line, 4)[0] === $url)
+				return new ScriptTuple(explode(static::DELIMITER, $line, 4));
 		throw new \RuntimeException(sprintf('configuration not found for server "%s"', $url));
 	}
 }
