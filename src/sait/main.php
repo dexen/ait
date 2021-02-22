@@ -20,8 +20,10 @@ function store_from_upload()
 	if ( $_FILES['file']['error'])
 		throw new \RuntimeException(sprintf('file upload error: %d', $_FILES['file']['error']));
 
+	$in_dir = pathname_disallow_traverse_up($_POST['in_dir']??null);
+
 		# basename() to avoid unexpected path traversal
-	$destPN = __DIR__ .'/' .basename($_FILES['file']['name']);
+	$destPN = PN(__DIR__, $in_dir, basename($_FILES['file']['name']));
 	$v = move_uploaded_file($_FILES['file']['tmp_name'], $destPN);
 	if ($v !== true) {
 		unlink($destPN);	# in case of partial move
