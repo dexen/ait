@@ -9,3 +9,12 @@ function tp(...$a) { echo '<pre>'; foreach ($a as $v) echo H(print_r($v, true));
 	# preserve the slashes, i.e.,
 	# 'foo/bar baz.jpeg' => 'foo/bar%20baz.jpeg'
 function UP(string $str) : string { return str_replace('%2F', '/', rawurlencode($str)); }
+
+function pn(...$a) : string
+{
+	if (count($a) === 1)
+		return array_shift($a);
+	if (($a[0] === '') || ($a[0] === null))
+		return pn(...array_slice($a, 1));
+	return implode('/', $a);
+}
