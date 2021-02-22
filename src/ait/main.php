@@ -24,7 +24,12 @@ $fromA = array_slice($argv, 3);
 
 function upload_dir(Uploader $Uploader, string $fromPN)
 {
-	tp(sprintf('should upload dir "%s"', $fromPN));
+	tracef('uploading dir "%s"...', $fromPN);
+
+	foreach (glob(PN($fromPN, '*'), GLOB_ERR) as $innerPN)
+		upload_file($Uploader, $innerPN);
+
+	tracef('done uploading dir "%s".', $fromPN);
 }
 
 function tracef(string $str, ...$a)
