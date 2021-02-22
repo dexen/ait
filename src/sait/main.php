@@ -4,6 +4,7 @@ header('Status: 500 Internal Server Error');
 
 function H($str) { return htmlspecialchars($str); }
 function U($str) { return rawurlencode($str); }
+function UP(string $str) : string { return str_replace('%2F', '/', rawurlencode($str)); }
 
 function store_from_upload()
 {
@@ -45,4 +46,4 @@ echo '<p><em>Local files:</em></p>';
 echo '<table>';
 
 foreach (glob('*', GLOB_ERR) as $pn)
-	echo '<tr><td><a href="' .H(U($pn)) .'">' .H($pn) .'</a></td><td>' .H(date('Y-m-d H:i:s', filemtime($pn))) .'</td></tr>';
+	echo '<tr><td><a href="' .H(UP($pn)) .'">' .H($pn) .'</a></td><td>' .H(date('Y-m-d H:i:s', filemtime($pn))) .'</td></tr>';
