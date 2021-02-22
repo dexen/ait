@@ -1,6 +1,6 @@
 <?php
 
-header('Status: 500 Internal Server Error');
+header('HTTP/1.1 500 Internal Server Error');
 
 require 'lib.php';
 
@@ -43,7 +43,7 @@ function store_from_upload()
 if ($_POST)
 	store_from_upload();
 
-header('Status: 200 OK');
+header('HTTP/1.1 200 OK');
 
 echo '<!DOCTYPE html>';
 echo '<html>';
