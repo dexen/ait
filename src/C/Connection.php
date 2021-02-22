@@ -32,6 +32,6 @@ class Connection
 		case 200:
 			return;
 		default:
-			throw new AitException('request error');; }
+			throw new AitException('server returned HTTP status "%s"', $info['http_code']); }
 	}
 }
