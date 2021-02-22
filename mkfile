@@ -9,4 +9,4 @@ ait-dev:VQ:
 sait:VQ: sait-AAA.php
 
 sait-%.php:VQ:
-	cat src/sait/main.php > $target
+	arching src src/C -- src/sait/main.php -o $target
