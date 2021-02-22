@@ -24,6 +24,10 @@ function store_from_upload()
 
 		# basename() to avoid unexpected path traversal
 	$destPN = PN(__DIR__, $in_dir, basename($_FILES['file']['name']));
+	if (!is_dir(dirname($destPN))) {
+		$v = mkdir(dirname($destPN));
+		if ($v !== true)
+			throw new \RuntimeException('failed to mkdir() for uploaded file'); }
 	$v = move_uploaded_file($_FILES['file']['tmp_name'], $destPN);
 	if ($v !== true) {
 		unlink($destPN);	# in case of partial move
