@@ -2,9 +2,7 @@
 
 header('Status: 500 Internal Server Error');
 
-function H($str) { return htmlspecialchars($str); }
-function U($str) { return rawurlencode($str); }
-function UP(string $str) : string { return str_replace('%2F', '/', rawurlencode($str)); }
+require 'lib.php';
 
 function store_from_upload()
 {
