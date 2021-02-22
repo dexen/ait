@@ -42,5 +42,5 @@ echo '<h1>Welcome to sait</h1>';
 
 echo '<p><em>Local files:</em></p><li>';
 
-foreach (glob('*') as $pn)
+foreach (glob('*', GLOB_ERR) as $pn)
 	echo '<ul><a href="' .H(U($pn)) .'">' .H($pn) .'</a></ul>';
