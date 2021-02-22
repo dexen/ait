@@ -4,6 +4,15 @@ header('Status: 500 Internal Server Error');
 
 require 'lib.php';
 
+function pathname_disallow_traverse_up(string $pn) : string
+{
+	$a = explode('/', $pn);
+	foreach ($a as $segment)
+		if ($segment === '..')
+			throw new \RuntimeException('not supported: dot-dot');
+	return $pn;
+}
+
 function store_from_upload()
 {
 	if (empty($_FILES['file']))
