@@ -40,7 +40,9 @@ echo '<html>';
 echo '<body>';
 echo '<h1>Welcome to sait</h1>';
 
-echo '<p><em>Local files:</em></p><li>';
+echo '<p><em>Local files:</em></p>';
+
+echo '<table>';
 
 foreach (glob('*', GLOB_ERR) as $pn)
-	echo '<ul><a href="' .H(U($pn)) .'">' .H($pn) .'</a></ul>';
+	echo '<tr><td><a href="' .H(U($pn)) .'">' .H($pn) .'</a></td><td>' .H(date('Y-m-d H:i:s', filemtime($pn))) .'</td></tr>';
