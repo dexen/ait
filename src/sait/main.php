@@ -70,6 +70,16 @@ function tplAuth()
 		tplLoginForm();
 }
 
+function tplLocalFiles()
+{
+	echo '<p><em>Local files:</em></p>';
+
+	echo '<table>';
+
+	foreach (glob('*', GLOB_ERR) as $pn)
+		echo '<tr><td><a href="' .H(UP($pn)) .'">' .H($pn) .'</a></td><td>' .H(date('Y-m-d H:i:s', filemtime($pn))) .'</td></tr>';
+}
+
 
 switch ($page = ($_GET['page']??'index')) {
 case 'index':
@@ -98,9 +108,5 @@ echo '<h1>Welcome to sait</h1>';
 
 tplAuth();
 
-echo '<p><em>Local files:</em></p>';
-
-echo '<table>';
-
-foreach (glob('*', GLOB_ERR) as $pn)
-	echo '<tr><td><a href="' .H(UP($pn)) .'">' .H($pn) .'</a></td><td>' .H(date('Y-m-d H:i:s', filemtime($pn))) .'</td></tr>';
+if ($Security->loggedInP())
+	tplLocalFiles();
