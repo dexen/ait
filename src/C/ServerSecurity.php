@@ -20,6 +20,7 @@ class ServerSecurity
 	{
 		$this->slowDownPasswordGuessingAttempts();
 
-		password_verify($password, $this->passwordHash());
+		if (password_verify($password, $this->passwordHash()))
+			$_SESSION['_is_logged_in'] = true;
 	}
 }
