@@ -17,7 +17,8 @@ case 'php-string':
 	var_export($hash); echo "\n";
 	die();
 case 'php-script':
-	$code = '<?php function private_function_password_hash() { return ' .var_export($hash, $return = true) .'; };' ."\n";
+	$code = '<?php
+function private_function_password_hash() { return ' .var_export($hash, $return = true) .'; };' ."\n";
 	$a = token_get_all($code,  TOKEN_PARSE);
 	echo $code;
 	die();
