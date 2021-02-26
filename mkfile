@@ -9,3 +9,6 @@ sait-%.php:VQD:
 	arching src src/C -- src/sait/main.php -o $target
 
 test-build:VQ: ait sait
+
+clean:VQ:
+	rm -rf sait-*.php ait.php build/tmp/*.php
