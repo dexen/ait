@@ -80,7 +80,7 @@ case 'upload':
 	break;
 case 'login':
 	if ($_POST)
-		$Security->performLogin();
+		$Security->performLogin($_POST['password']);
 	break;
 default:
 	header('HTTP/1.1 404 Not Found');
