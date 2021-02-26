@@ -9,7 +9,7 @@ sait-%.php:VQD: build/tmp/sait-%-inline-data.php
 	arching src src/C -- src/sait/main.php -o $target < build/tmp/sait-$stem-inline-data.php
 
 build/tmp/sait-%-inline-data.php:VQD:
-	php tools/password-for-script.php sait-$stem.php | php tools/password-hash.php php-script > $target
+	php tools/preferences-for-script.php sait-$stem.php | php tools/script-preferences-script.php php-script > $target
 
 test-build:VQ: ait sait
 
