@@ -3,6 +3,8 @@
 header('HTTP/1.1 500 Internal Server Error');
 
 require 'lib.php';
+require 'ServerSecurity.php';
+require 'arching-input.php';
 
 function pathname_disallow_traverse_up(string $pn) : string
 {
@@ -44,15 +46,57 @@ function store_from_upload()
 		throw new \RuntimeException('failed to touch() uploaded file'); }
 }
 
-if ($_POST)
-	store_from_upload();
 
-header('HTTP/1.1 200 OK');
+$Security = new ServerSecurity();
+
+function tplLoginInfo() { echo '<p><em>Logged in.</em></p>'; }
+
+function tplLoginForm()
+{
+	echo '<form method="post" action="?page=login">';
+		echo '<p><em>Please log in.</em></p>';
+		echo '<p>Password:<br><input name="password" type="password"/></p>';
+		echo '<p><button type="submit">Login</button></p>';
+	echo '</form>';
+}
+
+function tplAuth()
+{
+	global $Security;
+
+	if ($Security->loggedInP())
+		tplLoginInfo();
+	else
+		tplLoginForm();
+}
+
+
+switch ($page = ($_GET['page']??'index')) {
+case 'index':
+	break;
+case 'upload':
+	if ($_POST)
+		store_from_upload();
+	break;
+case 'login':
+	if ($_POST)
+		$Security->performLogin();
+	break;
+default:
+	header('HTTP/1.1 404 Not Found');
+	throw new \RuntimeException(sprintf('unknown page "%s"', $page)); }
+
+if ($Security->loggedInP())
+	header('HTTP/1.1 200 OK');
+else
+	header('HTTP/1.1 401 Unauthorized');
 
 echo '<!DOCTYPE html>';
 echo '<html>';
 echo '<body>';
 echo '<h1>Welcome to sait</h1>';
+
+tplAuth();
 
 echo '<p><em>Local files:</em></p>';
 
