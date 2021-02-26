@@ -21,7 +21,7 @@ while (($rcd = fgetcsv($h, 0, "\t")) !== false) {
 
 switch (count($found)) {
 case 1:
-	echo $found[0][3] ."\n";
+	fputcsv(STDOUT, $found[0], "\t");
 	die();
 case 0:
 	throw new \RuntimeException(sprintf('no password found in config "%s" for script name "%s"',
