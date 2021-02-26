@@ -1,4 +1,4 @@
-MKHELL=rc
+MKSHELL=rc
 
 ait:VQ:
 	arching src src/C -- src/ait/main.php -o ait.php
