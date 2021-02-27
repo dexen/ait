@@ -27,27 +27,37 @@ class ServerSecurity
 
 	function expectInstallationMatches(string $scriptPathname)
 	{
-		$script = basename($scriptPathname);
-		if ($script !== private_function_sait_preference_script_name())
-			throw new \RuntimeException('script name does not match script preferences');
+		if ($this->currentScriptUrl() !== $this->preferenceScriptUrl())
+			throw new \RuntimeException('url does not match script preferences');
+	}
 
+	private
+	function currentScriptUrl() : string
+	{
+		if (empty($_SERVER['SERVER_PROTOCOL']))
+			throw new \RuntimeException('unknown protocol');
+		if (strncmp($_SERVER['SERVER_PROTOCOL'], 'HTTP/1', 6) === 0)
+			$proto = 'http';
+		else
+			throw new \RuntimeException('unsupported protocol');
+		if (($proto === 'http') && (!empty($_SERVER['HTTPS'])))
+			$proto = 'https';
 		if (empty($_SERVER['HTTP_HOST']))
-			throw new \RuntimeException('could not verify host match');
+			throw new \RuntimeException('unknown host');
 		$hA = parse_url($_SERVER['HTTP_HOST']);
 
 		if (empty($_SERVER['REQUEST_URI']))
-			throw new \RuntimeException('could not verify uri match');
+			throw new \RuntimeException('unknown uri');
 		$pA = parse_url($_SERVER['REQUEST_URI']);
 		if (empty($pA['path']))
-			throw new \RuntimeException('could not verify uri match');
-		$pathPath = dirname($pA['path']) .'/';
+			throw new \RuntimeException('unknown uri');
 
-		$current = sprintf('%s:%s%s', $hA['host'], $hA['port'] ?? 80, $pathPath);
+		return sprintf('%s://%s:%s%s', $proto, $hA['host'], $hA['port'] ?? 80, $pA['path']);
+	}
 
-		$expectedA = private_function_sait_preference_host_port_path();
-		$expected = sprintf('%s:%s%s', $expectedA['host'], $expectedA['port'] ?? 80, $expectedA['path']);
-
-		if ($current !== $expected)
-			throw new \RuntimeException('uri does not match script preferences');
+	protected
+	function preferenceScriptUrl() : string
+	{
+		return private_function_sait_preference_script_url();
 	}
 }
