@@ -47,7 +47,7 @@ function store_from_upload()
 }
 
 
-$Security = new ServerSecurity();
+$Security = new ServerSecurity(__FILE__);
 
 function tplLoginInfo() { echo '<p><em>Logged in.</em></p>'; }
 
