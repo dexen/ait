@@ -12,6 +12,7 @@ build/tmp/sait-%-inline-data.php:VQD:
 	php tools/preferences-for-script.php sait-$stem.php | php tools/script-preferences-script.php php-script > $target
 
 test-build:VQ: ait sait
+	mk clean
 
 clean:VQ:
 	rm -rf sait-*.php ait.php build/tmp/*.php
