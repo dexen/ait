@@ -8,14 +8,13 @@ $rcd = fgetcsv(STDIN, 0, "\t");
 if (count($rcd) !== 4)
 	throw new \RuntimeException('unsupported record format');
 
-$a = parse_url($rcd[0]);
-$url_a = [
-	'host' => $a['host'],
-	'port' => $a['port'] ?? 80,
-	'path' => $a['path'], ];
-
+$site_url = $rcd[0];
 $script_name = $rcd[1];
 $datetime = $rcd[2];
+
+if ($site_url[strlen($site_url)-1] !== '/')
+	throw new \RuntimeException(sprintf('expected site url to end with "/", current site url: "%s"', $site_url));
+$script_url = $site_url .$script_name;
 
 $password = $rcd[3];
 if (strlen($password) < 16)
@@ -32,7 +31,7 @@ case 'php-script':
 	$code =
 '<?php
 function private_function_password_hash() : string { return ' .var_export($hash, $return = true) .'; };
-function private_function_sait_preference_host_port_path() : array { return ' .var_export($url_a, $return = true) .'; };
+function private_function_sait_preference_script_url() : string { return ' .var_export($script_url, $return = true) .'; };
 function private_function_sait_preference_script_name() : string { return ' .var_export($script_name, $return = true) .'; };
 ';
 	$a = token_get_all($code,  TOKEN_PARSE);
