@@ -2,6 +2,7 @@
 
 header('HTTP/1.1 500 Internal Server Error');
 
+require 'arching-error-reporting.php';
 require 'lib.php';
 require 'ServerSecurity.php';
 require 'Slinky.php';

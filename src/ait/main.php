@@ -1,5 +1,6 @@
 <?php
 
+require 'arching-error-reporting.php';
 require 'lib.php';
 require 'C/AitException.php';
 require 'C/ScriptTuple.php';
