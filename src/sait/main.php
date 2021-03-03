@@ -4,6 +4,7 @@ header('HTTP/1.1 500 Internal Server Error');
 
 require 'lib.php';
 require 'ServerSecurity.php';
+require 'Slinky.php';
 require 'arching-input.php';
 
 function pathname_disallow_traverse_up(string $pn) : string
@@ -48,6 +49,7 @@ function store_from_upload()
 
 
 $Security = new ServerSecurity(__FILE__);
+$Slinky = $Security->Slinky();
 
 function tplLoginInfo() { echo '<p><em>Logged in.</em></p>'; }
 

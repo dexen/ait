@@ -60,4 +60,9 @@ class ServerSecurity
 	{
 		return private_function_sait_preference_script_url();
 	}
+
+	function Slinky() : Slinky
+	{
+		return new Slinky($this->preferenceScriptUrl());
+	}
 }
