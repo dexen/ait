@@ -83,6 +83,7 @@ function tplLocalFiles()
 		echo '<tr><td><a href="' .H(UP($pn)) .'">' .H($pn) .'</a></td><td>' .H(date('Y-m-d H:i:s', filemtime($pn))) .'</td></tr>';
 }
 
+$Slinky->with(['foo' => 'bar'])->redirectSeeOther();
 
 switch ($page = ($_GET['page']??'index')) {
 case 'index':
@@ -94,6 +95,8 @@ case 'upload':
 case 'login':
 	if ($_POST)
 		$Security->performLogin($_POST['password']);
+	if ($Security->loggedInP())
+		$Slinky->redirectSeeOther();
 	break;
 default:
 	header('HTTP/1.1 404 Not Found');
