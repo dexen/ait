@@ -3,7 +3,7 @@
 header('HTTP/1.1 500 Internal Server Error');
 
 	# fill in with PHP passwor_hash()
-$hash = '???';
+$hash = 'placeholder_for_password_hash_2d025152-8434-4947-9942-e3ee4643f82e';
 
 ini_set('error_reporting', E_ALL);
 ini_set('display_errors', true);
