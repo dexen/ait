@@ -65,14 +65,20 @@ $h = curl_init($Input->url());
 curl_setopt($h, CURLOPT_RETURNTRANSFER, true);
 curl_setopt($h, CURLOPT_MAXREDIRS, 0);
 
+$next_files = [];
+$next_size = 0;
+
 while (true) {
-$files = [];
-$size = 0;
+$files = $next_files;
+$size = $next_size;
 foreach ($Input->files() as list($origPN, $pn, $body)) {
-	$files[$pn] = base64_encode($body);
-	$size += filesize($origPN);
-	if (count($files) >= 100)
+	if (count($files) >= 100) {
+		$next_files = [ $pn => base64_encode($body), ];
+		$next_size = filesize($origPN);
 		break; }
+	else {
+		$files[$pn] = base64_encode($body);
+		$size += filesize($origPN); } }
 
 if (empty($files))
 	break;
