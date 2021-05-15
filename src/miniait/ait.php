@@ -65,13 +65,23 @@ $h = curl_init($Input->url());
 curl_setopt($h, CURLOPT_RETURNTRANSFER, true);
 curl_setopt($h, CURLOPT_MAXREDIRS, 0);
 
-foreach ($Input->files() as list($pn, $body))
+while (true) {
+$files = [];
+foreach ($Input->files() as list($pn, $body)) {
 	$files[$pn] = base64_encode($body);
+	if (count($files) >= 100)
+		break; }
+
+if (empty($files))
+	break;
+
+$payload = json_encode(compact('meta', 'files'),
+	JSON_UNESCAPED_LINE_TERMINATORS | JSON_UNESCAPED_SLASHES
+		| JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR );
+printf("Sending %d (%d)\n", count($files), strlen($payload));
 
 curl_setopt($h, CURLOPT_HTTPHEADER, array('X-HTTP-Method-Override: PUT'));
-curl_setopt($h, CURLOPT_POSTFIELDS, json_encode(compact('meta', 'files'),
-	JSON_UNESCAPED_LINE_TERMINATORS | JSON_UNESCAPED_SLASHES
-		| JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR ));
+curl_setopt($h, CURLOPT_POSTFIELDS, $payload);
 curl_setopt($h, CURLOPT_HTTPHEADER, [ 'Content-Type: application/json' ]);
 $v = curl_exec($h);
 if ($v === false) {
@@ -80,6 +90,6 @@ if ($v === false) {
 $a = curl_getinfo($h);
 if ($a['http_code'] !== 200) {
 	++$status;
-	printf("Error: HTTP status: %s\n", $a['http_code']); }
+	printf("Error: HTTP status: %s\n", $a['http_code']); } }
 
 die($status);
