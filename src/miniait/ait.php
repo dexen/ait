@@ -39,13 +39,13 @@ class StdinInput
 		return implode('/', $a);
 	}
 
-	function files() : Generator /* of [ PATHNAME, BODY ] records */
+	function files() : Generator /* of [ SOURCE_PATHNAME, DESTINATION_PATHNAME, BODY ] records */
 	{
 		while (!feof($this->stream)) {
 			$pathname = trim(fgets($this->stream), "\n");
 			if ($pathname === '')
 				continue;
-			yield [ $this->remotePathname($pathname), file_get_contents($pathname) ]; }
+			yield [ $pathname, $this->remotePathname($pathname), file_get_contents($pathname) ]; }
 	}
 
 	function password() : string
@@ -67,8 +67,10 @@ curl_setopt($h, CURLOPT_MAXREDIRS, 0);
 
 while (true) {
 $files = [];
-foreach ($Input->files() as list($pn, $body)) {
+$size = 0;
+foreach ($Input->files() as list($origPN, $pn, $body)) {
 	$files[$pn] = base64_encode($body);
+	$size += filesize($origPN);
 	if (count($files) >= 100)
 		break; }
 
