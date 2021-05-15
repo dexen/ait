@@ -86,7 +86,7 @@ if (empty($files))
 $payload = json_encode(compact('meta', 'files'),
 	JSON_UNESCAPED_LINE_TERMINATORS | JSON_UNESCAPED_SLASHES
 		| JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR );
-printf("Sending %d (%d)\n", count($files), strlen($payload));
+printf("Sending %d (%d) {%d}\n", count($files), strlen($payload)/1024, $size/1024);
 
 curl_setopt($h, CURLOPT_HTTPHEADER, array('X-HTTP-Method-Override: PUT'));
 curl_setopt($h, CURLOPT_POSTFIELDS, $payload);
