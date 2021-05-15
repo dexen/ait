@@ -60,12 +60,14 @@ $meta = [
 	'auth' => [
 		'password' => $Input->password(), ] ];
 $files = [];
-foreach ($Input->files() as list($pn, $body))
-	$files[$pn] = base64_encode($body);
 
 $h = curl_init($Input->url());
 curl_setopt($h, CURLOPT_RETURNTRANSFER, true);
 curl_setopt($h, CURLOPT_MAXREDIRS, 0);
+
+foreach ($Input->files() as list($pn, $body))
+	$files[$pn] = base64_encode($body);
+
 curl_setopt($h, CURLOPT_HTTPHEADER, array('X-HTTP-Method-Override: PUT'));
 curl_setopt($h, CURLOPT_POSTFIELDS, json_encode(compact('meta', 'files'),
 	JSON_UNESCAPED_LINE_TERMINATORS | JSON_UNESCAPED_SLASHES
@@ -79,7 +81,5 @@ $a = curl_getinfo($h);
 if ($a['http_code'] !== 200) {
 	++$status;
 	printf("Error: HTTP status: %s\n", $a['http_code']); }
-
-echo $v;
 
 die($status);
