@@ -18,6 +18,21 @@ $v = password_verify($a['meta']['auth']['password'] ?? null, $hash);
 if ($v !== true)
 	throw new Exception('auth failure');
 
+if (!empty($a['upgrade']['sait'])) {
+	$rcd = $a['upgrade']['sait'];
+	$target = basename($a['upgrade']['sait'][0]);
+	$tmp = 'sait-' .$target;
+	$code = base64_decode($a['upgrade']['sait'][2]);
+	token_get_all($code, TOKEN_PARSE);
+	if (!file_put_contents($tmp, $code)) {
+		unlink($tmp);
+		throw new Exception('upgrade failed (1)'); }
+	if (!rename($tmp, $target)) {
+		unlink($target);
+		unlink($tmp);
+		throw new Exception('upgrade failed (2)'); }
+}
+
 foreach ($a['files'] as $pn => $encoded_body) {
 		# FIXME - need security check on '/../' received from remote
 	$pn = '../' .$pn;
