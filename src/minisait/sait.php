@@ -43,6 +43,7 @@ foreach ($a['files'] as list($pn, $attributes, $encoded_body)) {
 	if ($v === false) {
 		unlink($tmp);
 		throw new Exception('could not store temporary file'); }
+	touch($tmp, $attributes[0]);
 	$v = rename($tmp, $pn);
 	if ($v === false) {
 		unlink($tmp);
