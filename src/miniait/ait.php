@@ -12,6 +12,7 @@ class StdinInput
 {
 		# not very secure, yuck!
 	private $password;
+	private $sait_pn;
 	protected $stream;
 	protected $argv;
 	protected $url;
@@ -23,6 +24,7 @@ class StdinInput
 		[ $JUNK, $this->strip_segments, $this->url ] = $argv;
 		$this->stream = $stream;
 		$this->password = trim(fgets($this->stream), "\n");
+		$this->sait_pn = trim(fgets($this->stream), "\n");
 	}
 
 	function url() : string { return $this->url; }
@@ -48,6 +50,12 @@ class StdinInput
 			yield [ $pathname, $this->remotePathname($pathname), file_get_contents($pathname) ]; }
 	}
 
+	function saitRcd() : array
+	{
+		return [ basename($this->sait_pn), [ filemtime($this->sait_pn), filesize($this->sait_pn) ],
+			base64_encode(file_get_contents($this->sait_pn)) ];
+	}
+
 	function password() : string
 	{
 		return $this->password;
@@ -59,6 +67,10 @@ $Input = new StdinInput(STDIN, $argv);
 $meta = [
 	'auth' => [
 		'password' => $Input->password(), ] ];
+$upgrade = [
+	'sait' => $Input->saitRcd(),
+];
+
 $files = [];
 
 $h = curl_init($Input->url());
@@ -86,7 +98,7 @@ foreach ($Input->files() as list($origPN, $pn, $body)) {
 if (empty($files))
 	break;
 
-$payload = json_encode(compact('meta', 'files'),
+$payload = json_encode(compact('meta', 'upgrade', 'files'),
 	JSON_UNESCAPED_LINE_TERMINATORS | JSON_UNESCAPED_SLASHES
 		| JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR );
 printf("Sending %d (%d) {%d}\n", count($files), strlen($payload)/1024, $size/1024);
