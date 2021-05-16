@@ -38,7 +38,7 @@ foreach ($a['files'] as $pn => $encoded_body) {
 	$pn = '../' .$pn;
 	if (!is_dir(dirname($pn)))
 		mkdir(dirname($pn), 0777, $recursive = true);
-	$tmp = dirname($pn) .'/.' .basename($pn) .'.dxrecv';
+	$tmp = dirname($pn) .'/.' .'sait-' .basename($pn);
 	$v = file_put_contents($tmp, base64_decode($encoded_body));
 	if ($v === false) {
 		unlink($tmp);
