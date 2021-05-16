@@ -114,6 +114,7 @@ $a = curl_getinfo($h);
 if ($a['http_code'] !== 200) {
 	++$status;
 	printf("Error: HTTP status: %s\n", $a['http_code']);
+	printf("Output: \"%s\"\n", $v);
 	die($status); } }
 
 die($status);
