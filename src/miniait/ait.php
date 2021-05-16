@@ -41,13 +41,13 @@ class StdinInput
 		return implode('/', $a);
 	}
 
-	function files() : Generator /* of [ SOURCE_PATHNAME, DESTINATION_PATHNAME, BODY ] records */
+	function files() : Generator /* of [ DESTINATION_PATHNAME, [ ATTRIBUTES], BODY ] records */
 	{
 		while (!feof($this->stream)) {
 			$pathname = trim(fgets($this->stream), "\n");
 			if ($pathname === '')
 				continue;
-			yield [ $pathname, $this->remotePathname($pathname), file_get_contents($pathname) ]; }
+			yield [ $this->remotePathname($pathname), [ filemtime($pathname), filesize($pathname) ], base64_encode(file_get_contents($pathname)) ]; }
 	}
 
 	function saitRcd() : array
@@ -85,14 +85,14 @@ $size_limit = 32*1024*1024;
 while (true) {
 $files = $next_files; $next_files = null;
 $size = $next_size; $next_size = null;
-foreach ($Input->files() as list($origPN, $pn, $body)) {
-	$newsize = filesize($origPN);
+foreach ($Input->files() as list($pn, $attributes, $body)) {
+	$newsize = $attributes[1];
 	if ((count($files) >= 100) || (($size+$newsize)>=$size_limit)) {
-		$next_files = [ $pn => base64_encode($body), ];
+		$next_files= [ [ $pn, $attributes, $body ] ];
 		$next_size = $newsize;
 		break; }
 	else {
-		$files[$pn] = base64_encode($body);
+		$files[] = [ $pn, $attributes, $body ];
 		$size += $newsize; } }
 
 if (empty($files))
