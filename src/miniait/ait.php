@@ -71,8 +71,8 @@ $next_size = 0;
 $size_limit = 32*1024*1024;
 
 while (true) {
-$files = $next_files;
-$size = $next_size;
+$files = $next_files; $next_files = null;
+$size = $next_size; $next_size = null;
 foreach ($Input->files() as list($origPN, $pn, $body)) {
 	$newsize = filesize($origPN);
 	if ((count($files) >= 100) || (($size+$newsize)>=$size_limit)) {
