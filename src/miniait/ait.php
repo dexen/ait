@@ -1,4 +1,4 @@
-#!/usr/bin/env php
+#!/usr/bin/env -S php -d 'memory_limit=512M'
 <?php
 
 ini_set('error_reporting', E_ALL);
