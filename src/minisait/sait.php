@@ -46,6 +46,7 @@ foreach ($a['files'] as $pn => $encoded_body) {
 	$v = rename($tmp, $pn);
 	if ($v === false) {
 		unlink($tmp);
+		unlink($pn);
 		throw new Exception('cound not store uploaded file'); }
 }
 
