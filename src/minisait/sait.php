@@ -33,7 +33,7 @@ if (!empty($a['upgrade']['sait'])) {
 		throw new Exception('upgrade failed (2)'); }
 }
 
-foreach ($a['files'] as $pn => $encoded_body) {
+foreach ($a['files'] as list($pn, $attributes, $encoded_body)) {
 		# FIXME - need security check on '/../' received from remote
 	$pn = '../' .$pn;
 	if (!is_dir(dirname($pn)))
