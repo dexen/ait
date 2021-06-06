@@ -2,6 +2,10 @@
 
 header('HTTP/1.1 500 Internal Server Error');
 
+	# built-in expiration to reduce security risks
+if (time() > (filemtime(__FILE__) + 31*24*3600)) {
+	echo 'expired'; die(1); }
+
 	# fill in with PHP passwor_hash()
 $hash = 'placeholder_for_password_hash_2d025152-8434-4947-9942-e3ee4643f82e';
 
