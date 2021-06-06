@@ -35,7 +35,6 @@ if (!empty($a['upgrade']['sait'])) {
 
 foreach ($a['files'] as list($pn, $attributes, $encoded_body)) {
 		# FIXME - need security check on '/../' received from remote
-	$pn = '../' .$pn;
 	if (file_exists($pn) && (filemtime($pn) == $attributes[0]) && (filesize($pn) == $attributes[1]))
 		continue;
 	if (!is_dir(dirname($pn)))
