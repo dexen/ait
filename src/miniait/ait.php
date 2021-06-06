@@ -29,10 +29,15 @@ class StdinInput
 	function __construct($stream, $argv)
 	{
 		$this->argv = $argv;
-		[ $JUNK, $this->strip_segments, $this->url ] = $argv;
-		$this->stream = $stream;
-		$this->password = trim(fgets($this->stream), "\n");
-		$this->sait_pn = trim(fgets($this->stream), "\n");
+		if (array_key_exists(1, $argv)) {
+			[ $JUNK, $this->strip_segments, $this->url ] = $argv;
+			$this->stream = $stream;
+			$this->password = trim(fgets($this->stream), "\n");
+			$this->sait_pn = trim(fgets($this->stream), "\n"); }
+		if (empty($this->password))
+			throw new \Exception('no password provided (first line)');
+		if (!is_file($this->sait_pn))
+			throw new \Exception(sprintf('sait script not found, tried "%s" (second line)', $this->sait_pn));
 	}
 
 	function url() : string { return $this->url; }
