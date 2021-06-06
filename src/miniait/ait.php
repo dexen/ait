@@ -8,6 +8,14 @@ function td(...$a) { foreach ($a as $v) var_dump($v); echo "--\ntd()\n"; die(1);
 
 $status = 0;
 
+function render_usage()
+{
+	echo 'Usage: INPUT_RECORDS | ait STRIP_PATHNAME_SEGMENTS TARGET_SAIT_URL
+Example:
+# { echo $PASSWORD; echo $SAIT_SCRIPT_PATHNAME; find s/ -type f; } | ./ait 1 https://example.com/sait-foobarbaz.php
+';
+}
+
 class StdinInput
 {
 		# not very secure, yuck!
@@ -60,9 +68,13 @@ class StdinInput
 	{
 		return $this->password;
 	}
+
+	function noInput() { return count($this->argv) <= 1; }
 }
 
 $Input = new StdinInput(STDIN, $argv);
+if ($Input->noInput())
+	render_usage() or die(1);
 
 $meta = [
 	'auth' => [
