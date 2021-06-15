@@ -38,6 +38,9 @@ if (!empty($a['upgrade']['sait'])) {
 }
 
 foreach ($a['files'] as list($pn, $attributes, $encoded_body)) {
+		# this should probably be fixed in/compiled in
+	if (($_GET['up']??null)==='one')
+		$pn = '../' .$pn;
 		# FIXME - need security check on '/../' received from remote
 	if (file_exists($pn) && (filemtime($pn) == $attributes[0]) && (filesize($pn) == $attributes[1]))
 		continue;
