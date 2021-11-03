@@ -25,10 +25,16 @@ class StdinInput
 	protected $argv;
 	protected $url;
 	protected $strip_segments;
+	protected $http_username;
+	protected $http_password;
 
 	function __construct($stream, $argv)
 	{
 		$this->argv = $argv;
+		if (($argv[1]??null) === '--http-auth') {
+			$this->http_username = $argv[2];
+			$this->http_password = $argv[3];
+			$argv = array_merge([ $argv[0] ], array_slice($argv, 4)); }
 		if (array_key_exists(1, $argv)) {
 			[ $JUNK, $this->strip_segments, $this->url ] = $argv;
 			$this->stream = $stream;
@@ -74,6 +80,9 @@ class StdinInput
 		return $this->password;
 	}
 
+	function httpUsername() { return $this->http_username; }
+	function httpPassword() { return $this->http_password; }
+
 	function noInput() { return count($this->argv) <= 1; }
 }
 
@@ -91,6 +100,10 @@ $upgrade = [
 $files = [];
 
 $h = curl_init($Input->url());
+if ($Input->httpUsername() !== null)
+	curl_setopt($h, CURLOPT_USERNAME, $Input->httpUsername());
+if ($Input->httpPassword() !== null)
+	curl_setopt($h, CURLOPT_PASSWORD, $Input->httpPassword());
 curl_setopt($h, CURLOPT_RETURNTRANSFER, true);
 curl_setopt($h, CURLOPT_MAXREDIRS, 0);
 
