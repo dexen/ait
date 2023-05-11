@@ -69,6 +69,13 @@ class StdinInput
 			yield [ $this->remotePathname($pathname), [ filemtime($pathname), filesize($pathname) ], base64_encode(file_get_contents($pathname)) ]; }
 	}
 
+	function encoded_files() : Generator /* of [ DESTINATION_PATHNAME, [ ATTRIBUTES], BODY ] records */
+	{
+		foreach ($this->files() as $rcd) {
+			[$rcd[0], $rcd[2]] = [base64_encode($rcd[0]), base64_encode($rcd[2])];
+			yield $rcd; }
+	}
+
 	function saitRcd() : array
 	{
 		return [ basename($this->sait_pn), [ filemtime($this->sait_pn), filesize($this->sait_pn) ],
@@ -97,7 +104,7 @@ $upgrade = [
 	'sait' => $Input->saitRcd(),
 ];
 
-$files = [];
+$encoded_files = $files = [];
 
 $h = curl_init($Input->url());
 if ($Input->httpUsername() !== null)
@@ -113,25 +120,25 @@ $next_size = 0;
 $size_limit = 32*1024*1024;
 
 while (true) {
-$files = $next_files; $next_files = null;
+$encoded_files = $next_files; $next_files = null;
 $size = $next_size; $next_size = null;
-foreach ($Input->files() as list($pn, $attributes, $body)) {
+foreach ($Input->encoded_files() as list($pn, $attributes, $body)) {
 	$newsize = $attributes[1];
-	if ((count($files) >= 1000) || (($size+$newsize)>=$size_limit)) {
+	if ((count($encoded_files) >= 1000) || (($size+$newsize)>=$size_limit)) {
 		$next_files= [ [ $pn, $attributes, $body ] ];
 		$next_size = $newsize;
 		break; }
 	else {
-		$files[] = [ $pn, $attributes, $body ];
+		$encoded_files[] = [ $pn, $attributes, $body ];
 		$size += $newsize; } }
 
-if (empty($files))
+if (empty($encoded_files))
 	break;
 
-$payload = json_encode(compact('meta', 'upgrade', 'files'),
+$payload = json_encode(compact('meta', 'upgrade', 'files', 'encoded_files'),
 	JSON_UNESCAPED_LINE_TERMINATORS | JSON_UNESCAPED_SLASHES
 		| JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR );
-printf("Sending %d (%d) {%d}\n", count($files), strlen($payload)/1024, $size/1024);
+printf("Sending %d (%d) {%d}\n", count($encoded_files), strlen($payload)/1024, $size/1024);
 
 curl_setopt($h, CURLOPT_HTTPHEADER, array('X-HTTP-Method-Override: PUT'));
 curl_setopt($h, CURLOPT_POSTFIELDS, $payload);

@@ -37,6 +37,9 @@ if (!empty($a['upgrade']['sait'])) {
 		throw new Exception('upgrade failed (2)'); }
 }
 
+foreach ($a['encoded_files'] as $rcd)
+	$a['files'][] = [base64_decode($rcd[0]), $rcd[1], base64_decode($rcd[2])];
+
 foreach ($a['files'] as list($pn, $attributes, $encoded_body)) {
 		# this should probably be fixed in/compiled in
 	if (($_GET['up']??null)==='one')
