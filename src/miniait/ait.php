@@ -16,6 +16,8 @@ Example:
 ';
 }
 
+function xencode(string $str) { return strrev(base64_encode($str)); }
+
 class StdinInput
 {
 		# not very secure, yuck!
@@ -72,13 +74,13 @@ class StdinInput
 	function encoded_files() : Generator /* of [ DESTINATION_PATHNAME, [ ATTRIBUTES], BODY ] records */
 	{
 		foreach ($this->files() as $rcd) {
-			[$rcd[0], $rcd[2]] = [base64_encode($rcd[0]), base64_encode($rcd[2])];
+			[$rcd[0], $rcd[2]] = [xencode($rcd[0]), $rcd[2]];
 			yield $rcd; }
 	}
 
 	function saitRcd() : array
 	{
-		return [ basename($this->sait_pn), [ filemtime($this->sait_pn), filesize($this->sait_pn) ],
+		return [ xencode(basename($this->sait_pn)), [ filemtime($this->sait_pn), filesize($this->sait_pn) ],
 			base64_encode(file_get_contents($this->sait_pn)) ];
 	}
 
@@ -138,6 +140,8 @@ if (empty($encoded_files))
 $payload = json_encode(compact('meta', 'upgrade', 'files', 'encoded_files'),
 	JSON_UNESCAPED_LINE_TERMINATORS | JSON_UNESCAPED_SLASHES
 		| JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR );
+$payload = gzdeflate($payload, 1, ZLIB_ENCODING_RAW);
+file_put_contents('PAYLOAD-DUMP.json', $payload);
 printf("Sending %d (%d) {%d}\n", count($encoded_files), strlen($payload)/1024, $size/1024);
 
 curl_setopt($h, CURLOPT_HTTPHEADER, array('X-HTTP-Method-Override: PUT'));
