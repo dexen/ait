@@ -119,7 +119,7 @@ curl_setopt($h, CURLOPT_MAXREDIRS, 0);
 $next_files = [];
 $next_size = 0;
 
-$size_limit = 32*1024*1024;
+$size_limit = 64*1024*1024;
 
 while (true) {
 $encoded_files = $next_files; $next_files = null;
