@@ -126,6 +126,8 @@ $encoded_files = $next_files; $next_files = null;
 $size = $next_size; $next_size = null;
 foreach ($Input->encoded_files() as list($pn, $attributes, $body)) {
 	$newsize = $attributes[1];
+	if ($newsize >= $size_limit)
+		throw new \Exception(sprintf('file too large: "%s" (%d >= %d)', $pn, $newsize, $size_limit));
 	if ((count($encoded_files) >= 1000) || (($size+$newsize)>=$size_limit)) {
 		$next_files= [ [ $pn, $attributes, $body ] ];
 		$next_size = $newsize;
