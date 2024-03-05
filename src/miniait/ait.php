@@ -146,6 +146,7 @@ $payload = gzdeflate($payload, 1, ZLIB_ENCODING_RAW);
 file_put_contents('PAYLOAD-DUMP.json', $payload);
 printf("Sending %d (%d) {%d}\n", count($encoded_files), strlen($payload)/1024, $size/1024);
 
+curl_setopt($h, CURLOPT_USERAGENT, 'Mozilla/5.0 (compatible; Ait/1.0; +http://dexen.me/ait/)');
 curl_setopt($h, CURLOPT_HTTPHEADER, array('X-HTTP-Method-Override: PUT'));
 curl_setopt($h, CURLOPT_POSTFIELDS, $payload);
 curl_setopt($h, CURLOPT_HTTPHEADER, [ 'Content-Type: application/json' ]);
